@@ -1,10 +1,23 @@
-/* LoginPage.css */
+
+body {
+  background-color: lightblue;
+
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  display: flex; 
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  min-height: 100vh; /* Ensure the container covers the entire viewport height */
+}
+
 .login-container {
-    display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     background-color: lightblue;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  
   }
   
   .login-box {
@@ -13,9 +26,12 @@
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    width: 400px;
+    height: 400px;
+    margin: 0;
   }
   
-  h2 {
+  h3, h2   {
     color: #333;
   }
   
@@ -33,20 +49,26 @@
   
   input[type="email"],
   input[type="password"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
     outline: none;
   }
+
+  input[type="email"]::placeholder {
+    color: grey;
+  }
   
   .login-button {
     background-color: blue;
     color: white;
+    font-weight: bold;
     padding: 10px 20px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    width: 200px;
   }
   
   .login-button:hover {
@@ -54,8 +76,8 @@
   }
   
   p {
+    color: black;
     margin-top: 10px;
-    font-weight: bold;
   }
   
   a {
