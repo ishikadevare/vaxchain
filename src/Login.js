@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for routing
-import './Login.css'; // Import the CSS for styling
-import Signup from './Signup';
+import { Link } from ' react-router-dom'; 
+import './Login.css'; 
+
 
 function Login() {
   return (
@@ -21,7 +21,8 @@ function Login() {
         </form>
         <p>
           New User? <Link to="/Signup">Register here</Link>
-        </p>
+        </p> 
+        
       </div>
     </div>
   );
