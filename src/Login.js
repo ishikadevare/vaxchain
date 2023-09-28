@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link for routing
 import './Login.css'; // Import the CSS for styling
 
-function LoginPage() {
+function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
@@ -26,4 +26,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default Login;
