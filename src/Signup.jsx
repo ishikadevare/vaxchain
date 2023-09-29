@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
-import './Signup.css'; 
-import { Link } from ' react-router-dom'; 
+import './Signup.css';
+import { Link } from 'react-router-dom';
 
 function Signup() {
-  // State for input values
-  const [fullName, setFullName] = useState('JohnDoe');
-  const [email, setEmail] = useState('john@gmail.com');
+  // State for input values and error messages
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Manufacturer');
+  const [role, setRole] = useState('');
+  const [error, setError] = useState('');
 
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can perform registration logic here
+
+    // Basic validation: Check if required fields are not empty
+    if (!fullName || !email || !password || !role) {
+      setError('Please fill all fields.');
+      return;
+    }
+
+    // You can perform additional validation here, e.g., email format, password strength, etc.
+
+    // If validation passes, you can proceed with your registration logic here
+    // For example, sending a request to your server to create a new account
+
+    // Reset the error message
+    setError('');
   };
 
   return (
@@ -26,6 +40,7 @@ function Signup() {
               type="text"
               id="fullName"
               value={fullName}
+              placeholder="John Doe"
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
@@ -35,6 +50,7 @@ function Signup() {
             <input
               type="email"
               id="email"
+              placeholder="john@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -46,25 +62,35 @@ function Signup() {
               type="password"
               id="password"
               value={password}
+              placeholder="*****"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <div className="input-group">
             <label htmlFor="role">Role</label>
-            <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="">Select Role</option>
               <option value="Manufacturer">Manufacturer</option>
               <option value="Doctor">Doctor</option>
               <option value="Distributor">Distributor</option>
             </select>
           </div>
 
-          <button className="register-button" type="submit">Register</button>
+          <button className="register-button" type="submit">
+            Register
+          </button>
         </form>
+
+        {error && <p className="error">{error}</p>}
 
         <p>
           Already have an Account? <Link to="/Login">Login</Link>
-        </p> 
+        </p>
       </div>
     </div>
   );
