@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import './Signup.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth, db} from './firebase';
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 
 function Signup() {
   // State for input values and error messages
@@ -9,9 +17,10 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation: Check if required fields are not empty
@@ -20,13 +29,66 @@ function Signup() {
       return;
     }
 
-    // You can perform additional validation here, e.g., email format, password strength, etc.
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailPattern.test(email)) {
+      setError('Invalid email format.');
+      return;
+    }
 
-    // If validation passes, you can proceed with your registration logic here
-    // For example, sending a request to your server to create a new account
+    // Password length validation
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
 
-    // Reset the error message
-    setError('');
+    const userExists = await checkIfUserExists(email);
+
+    if (userExists) {
+      setError('Email is already registered. Please login.');
+      return;
+    }
+
+    try {
+      // Create the user in Firebase Authentication
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+
+      // Store user data in Firestore
+      const userData = {
+        fullName,
+        email,
+        role,
+      };
+
+      await addUserToFirestore(userCredential.user.uid, userData);
+
+      console.log('User registered:', userCredential.user);
+
+      // Reset the error message and navigate to another page
+      setError('');
+      navigate('/Login'); // Navigate to the dashboard page upon successful registration
+    } catch (error) {
+      setError('Registration failed. Please try again.');
+      console.error('Registration error:', error);
+    }
+  };
+
+  // Function to check if a user with the same email is already registered
+  const checkIfUserExists = async (emailToCheck) => {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', emailToCheck));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  };
+
+  // Function to add user data to Firestore
+  const addUserToFirestore = async (uid, userData) => {
+    console.log('Adding user data to Firestore:', userData);
+    const usersRef = collection(db, 'users');
+    await addDoc(usersRef, {
+      uid,
+      ...userData,
+    });
+    
   };
 
   return (
@@ -53,6 +115,7 @@ function Signup() {
               placeholder="john@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="off"
             />
           </div>
 
@@ -64,6 +127,7 @@ function Signup() {
               value={password}
               placeholder="*****"
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="off"
             />
           </div>
 

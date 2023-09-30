@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import './Login.css'; 
+import { auth } from './firebase';
 
 function Login() {
   // State for input values and error messages
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation: Check if email and password are not empty
@@ -18,11 +20,30 @@ function Login() {
       return;
     }
 
-    // If validation passes, you can proceed with your login logic here
-    // For example, sending a request to your server for authentication
+    // Validate email format using a regular expression
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailPattern.test(email)) {
+      setError('Invalid email format.');
+      return;
+    }
 
-    // Reset the error message
-    setError('');
+    // Password length validation
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
+
+    console.log('Email:', email);
+    console.log('Password:', password);
+
+    try {
+      await auth.signInWithEmailAndPassword(email,password);
+      navigate('/dashboard');
+
+    } catch (error) {
+      setError('Invalid email or password!');
+      console.error('Login error:', error);
+    }
   };
 
   return (
@@ -37,6 +58,7 @@ function Login() {
               placeholder="john@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="off"
             />
           </div>
           <div className="input-field">
@@ -45,6 +67,7 @@ function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="off"
             />
           </div>
           <button className="login-button">Login</button>

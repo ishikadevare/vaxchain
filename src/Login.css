@@ -37,7 +37,7 @@ h3, h2 {
 .input-field {
   margin-bottom: 15px;
   text-align: left;
-  width: 55vh;
+  width: 90%;
 }
 
 label {
@@ -54,6 +54,7 @@ input[type="password"] {
   border-radius: 3px;
   outline: none;
   background-color: rgb(216, 215, 215);
+  width: 90%;
 }
 
 input[type="email"]::placeholder {
